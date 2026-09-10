@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreetingManager Test</title>
+</head>
+<body>
+    <h1>GreetingManager Test Results</h1>
+    <div id="test-results"></div>
+
+    <div class="dashboard-container">
+        <header class="greeting-section" role="banner">
+            <div class="greeting-content">
+                <h1 class="greeting-text" id="greeting-text">Pagi</h1>
+                <div class="time-display">
+                    <time class="date-display" id="date-display">Loading...</time>
+                    <time class="time-display" id="time-display">Loading...</time>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        const results = [];
+        
+        function test(description, fn) {
+            try {
+                fn();
+                results.push({ passed: true, description });
+                console.log(`✓ ${description}`);
+            } catch (error) {
+                results.push({ passed: false, description, error: error.message });
+                console.log(`✗ ${description}: ${error.message}`);
+            }
+        }
+
+        function assert(condition, message) {
+            if (!condition) throw new Error(message);
+        }
+
+        function assertEqual(actual, expected, message) {
+            if (actual !== expected) {
+                throw new Error(`${message}. Expected: "${expected}", Got: "${actual}"`);
+            }
+        }
+
+        console.log('\n=== GreetingManager Tests ===\n');
+
+        // Test 1: Module exists and is exported
+        test('GreetingManager should be exported in window.TodoApp', () => {
+            assert(window.TodoApp.GreetingManager !== undefined, 'GreetingManager not found');
+        });
+
+        // Test 2: getGreeting() function
+        test('getGreeting(4) should return "Pagi"', () => {
+            assertEqual(window.TodoApp.GreetingManager.getGreeting(4), 'Pagi', 'Hour 4');
+        });
+
+        test('getGreeting(10) should return "Pagi"', () => {
+            assertEqual(window.TodoApp.GreetingManager.getGreeting(10), 'Pagi', 'Hour 10');
+        });
+
+        test('getGreeting(11) should return "Siang"', () => {
+            assertEqual(window.TodoApp.GreetingManager.getGreeting(11), 'Siang', 'Hour 11');
+        });
+
+        test('getGreeting(15) should return "Sore"', () => {
+            assertEqual(window.TodoApp.GreetingManager.getGreeting(15), 'Sore', 'Hour 15');
+        });
+
+        test('getGreeting(19) should return "Malam"', () => {
+            assertEqual(window.TodoApp.GreetingManager.getGreeting(19), 'Malam', 'Hour 19');
+        });
+
+        test('getGreeting(0) should return "Malam"', () => {
+            assertEqual(window.TodoApp.GreetingManager.getGreeting(0), 'Malam', 'Hour 0');
+        });
+
+        // Test 3: formatTime() function
+        test('formatTime() should return "HH:MM:SS" format', () => {
+            const date = new Date(2024, 0, 1, 5, 3, 8);
+            const result = window.TodoApp.GreetingManager.formatTime(date);
+            assert(result.match(/^\d{2}:\d{2}:\d{2}$/), `Format should be HH:MM:SS, got: ${result}`);
+        });
+
+        test('formatTime(05:03:08) should format correctly', () => {
+            const date = new Date(2024, 0, 1, 5, 3, 8);
+            assertEqual(window.TodoApp.GreetingManager.formatTime(date), '05:03:08', 'Time format');
+        });
+
+        test('formatTime(14:30:45) should format correctly', () => {
+            const date = new Date(2024, 0, 1, 14, 30, 45);
+            assertEqual(window.TodoApp.GreetingManager.formatTime(date), '14:30:45', 'Time format');
+        });
+
+        test('formatTime(23:59:59) should format correctly', () => {
+            const date = new Date(2024, 0, 1, 23, 59, 59);
+            assertEqual(window.TodoApp.GreetingManager.formatTime(date), '23:59:59', 'Time format');
+        });
+
+        test('formatTime(00:00:00) should format correctly', () => {
+            const date = new Date(2024, 0, 1, 0, 0, 0);
+            assertEqual(window.TodoApp.GreetingManager.formatTime(date), '00:00:00', 'Time format');
+        });
+
+        // Test 4: formatDate() function
+        test('formatDate() should return a non-empty string', () => {
+            const date = new Date(2024, 8, 26);
+            const result = window.TodoApp.GreetingManager.formatDate(date);
+            assert(result && result.length > 0, 'Date should be non-empty');
+        });
+
+        test('formatDate() should include year', () => {
+            const date = new Date(2024, 8, 26);
+            const result = window.TodoApp.GreetingManager.formatDate(date);
+            assert(result.includes('2024'), `Date should include year 2024, got: ${result}`);
+        });
+
+        test('formatDate() should include day of month', () => {
+            const date = new Date(2024, 8, 26);
+            const result = window.TodoApp.GreetingManager.formatDate(date);
+            assert(result.includes('26'), `Date should include day 26, got: ${result}`);
+        });
+
+        // Test 5: start/stop functions
+        test('start() should create an interval', () => {
+            window.TodoApp.GreetingManager.stop();
+            window.TodoApp.GreetingManager.start();
+            assert(window.TodoApp.GreetingManager.intervalId !== null, 'Interval should be created');
+            window.TodoApp.GreetingManager.stop();
+        });
+
+        test('stop() should clear the interval', () => {
+            window.TodoApp.GreetingManager.start();
+            window.TodoApp.GreetingManager.stop();
+            assert(window.TodoApp.GreetingManager.intervalId === null, 'Interval should be cleared');
+        });
+
+        // Test 6: DOM updates after init
+        test('init() should set up DOM elements', () => {
+            const greetingEl = document.getElementById('greeting-text');
+            const dateEl = document.getElementById('date-display');
+            const timeEl = document.getElementById('time-display');
+            
+            assert(greetingEl !== null, 'greeting-text element should exist');
+            assert(dateEl !== null, 'date-display element should exist');
+            assert(timeEl !== null, 'time-display element should exist');
+        });
+
+        test('init() should have updated the DOM with display values', () => {
+            const greetingEl = document.getElementById('greeting-text');
+            const dateEl = document.getElementById('date-display');
+            const timeEl = document.getElementById('time-display');
+            
+            // Check that they've been updated (not just "Loading...")
+            assert(greetingEl.textContent.length > 0, 'Greeting should be set');
+            assert(dateEl.textContent !== 'Loading...', 'Date should be updated');
+            assert(timeEl.textContent !== 'Loading...', 'Time should be updated');
+        });
+
+        // Test 7: updateDisplay() consistency
+        test('updateDisplay() should be consistent for same time', () => {
+            const date = new Date(2024, 0, 1, 12, 0, 0);
+            window.TodoApp.GreetingManager.currentTime = date;
+            window.TodoApp.GreetingManager.updateDisplay();
+            const greeting1 = window.TodoApp.GreetingManager.greetingPeriod;
+            
+            window.TodoApp.GreetingManager.updateDisplay();
+            const greeting2 = window.TodoApp.GreetingManager.greetingPeriod;
+            
+            assertEqual(greeting1, greeting2, 'Greeting should be consistent');
+        });
+
+        // Display results
+        setTimeout(() => {
+            const resultsDiv = document.getElementById('test-results');
+            const passed = results.filter(r => r.passed).length;
+            const failed = results.filter(r => !r.passed).length;
+            
+            let html = `<p><strong>Passed: ${passed} / Failed: ${failed}</strong></p>`;
+            html += '<ul>';
+            results.forEach(r => {
+                const symbol = r.passed ? '✓' : '✗';
+                html += `<li>${symbol} ${r.description}`;
+                if (!r.passed) {
+                    html += ` - ${r.error}`;
+                }
+                html += '</li>';
+            });
+            html += '</ul>';
+            resultsDiv.innerHTML = html;
+
+            console.log(`\n=== Results ===`);
+            console.log(`Passed: ${passed}`);
+            console.log(`Failed: ${failed}`);
+        }, 500);
+    </script>
+</body>
+</html>

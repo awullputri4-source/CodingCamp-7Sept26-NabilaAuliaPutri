@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List Life Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        
+        <!-- Greeting Section -->
+        <div class="greeting-section">
+            <div class="time-display" id="time-display">10:45:22</div>
+            <div class="date-display" id="date-display">Tuesday, January 27, 2026</div>
+            <div class="greeting-text" id="greeting-text">Good Morning</div>
+        </div>
+
+        <!-- Main Grid: Timer and Tasks -->
+        <div class="main-grid">
+            
+            <!-- Focus Timer Section -->
+            <section class="timer-section" aria-labelledby="timer-title">
+                <h2 id="timer-title" class="section-title">Focus Timer</h2>
+                <div class="timer-display" id="timer-display" role="status" aria-label="Timer display">25:00</div>
+                <div class="timer-controls">
+                    <button class="btn btn-start" id="timer-start" aria-label="Start timer">Start</button>
+                    <button class="btn btn-stop" id="timer-stop" aria-label="Stop timer">Stop</button>
+                    <button class="btn btn-reset" id="timer-reset" aria-label="Reset timer">Reset</button>
+                </div>
+                <p class="timer-status" id="timer-status" role="status">Ready to start</p>
+            </section>
+
+            <!-- Tasks Section -->
+            <section class="tasks-section" aria-labelledby="tasks-title">
+                <h2 id="tasks-title" class="section-title">Tasks</h2>
+                
+                <div class="task-input-container">
+                    <input type="text" id="task-input" class="task-input" placeholder="Add a new task..." aria-label="New task">
+                    <button class="btn btn-add" id="task-add-btn">Add</button>
+                </div>
+
+                <ul class="task-list" id="task-list" role="list"></ul>
+                <div class="empty-state" id="tasks-empty-state">No tasks</div>
+            </section>
+
+        </div>
+
+        <!-- Quick Links Section -->
+        <section class="quick-links-section" aria-labelledby="quick-links-title">
+            <h2 id="quick-links-title" class="section-title">Quick Links</h2>
+            
+            <div class="quick-links-input">
+                <input type="text" id="link-name" class="link-input" placeholder="Link name" aria-label="Website name">
+                <input type="url" id="link-url" class="link-input" placeholder="URL" aria-label="Website URL">
+                <button class="btn btn-add-link" id="link-add-btn">Add Link</button>
+            </div>
+
+            <div class="links-container" id="links-container" role="list"></div>
+        </section>
+
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
